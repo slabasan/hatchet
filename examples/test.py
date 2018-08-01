@@ -15,7 +15,7 @@
 from hatchet import *
 import sys
 import glob
-import struct 
+import struct
 import numpy as np
 import time
 
@@ -40,20 +40,22 @@ if __name__ == "__main__":
             num_nodes = struct.unpack('>i', metricdb.read(4))[0]
             num_metrics = struct.unpack('>i', metricdb.read(4))[0]
 
-    metrics = np.empty([num_nodes * num_pes, num_metrics + 2])
+    shape = [num_nodes * num_pes, num_metrics + 2]
+    metrics = np.empty(shape)
 
     # assumes that glob returns a sorted order
-    for pe, filename in enumerate(metricdb_files):
+    for pe, filename in enumerate(metricdb_files[:num_pes]):
         with open(filename, "rb") as metricdb:
             metricdb.seek(32)
             arr1d = np.fromfile(metricdb, dtype=np.dtype('>f8'),
                                 count=num_metrics * num_nodes)
 
-        for i in range(0, num_nodes):
-            for j in range(0, num_metrics):
-                metrics[pe*num_nodes + i ][j] = arr1d[i*num_metrics + j]
-            metrics[pe*num_nodes + i ][2] = float(i)
-            metrics[pe*num_nodes + i][3] = float(pe)
+        pe_off = pe*num_nodes
+
+        metrics[pe_off:pe_off + num_nodes, :2].flat = arr1d.flat
+        metrics[pe_off:pe_off + num_nodes, 2] = range(num_nodes)
+        metrics[pe_off:pe_off + num_nodes, 3] = float(pe)
+
     time2 = time.time()
     print "read metric db ", time2-time1
 
