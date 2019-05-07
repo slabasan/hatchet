@@ -34,5 +34,6 @@ setup(
     ],
     keywords='',
     packages = ['hatchet', 'hatchet.util', 'hatchet.external'],
+    install_requires = ['pydot'],
 )
 
