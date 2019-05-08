@@ -10,13 +10,11 @@
 # Please also read the LICENSE file for the MIT License notice.
 ##############################################################################
 
-import sys
+from __future__ import unicode_literals
 
 from .external.printtree import trees_as_text
 from .util.dot import trees_to_dot
 from .node import Node
-
-PY3 = sys.version_info >= (3, 0, 0)
 
 class Graph:
     """ A possibly multi-rooted tree or graph from one input dataset.
@@ -68,10 +66,7 @@ class Graph:
                                threshold, expand_names, unicode=unicode,
                                color=color)
 
-        if PY3:
-            return result
-        else:
-            return result.encode('utf-8')
+        return result
 
     def to_dot(self, roots=None, dataframe=None, metric='time', name='name',
                rank=0, threshold=0.0):

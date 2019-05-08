@@ -10,6 +10,7 @@
 # Please also read the LICENSE file for the MIT License notice.
 ##############################################################################
 
+from __future__ import print_function, unicode_literals
 from setuptools import setup, find_packages
 from codecs import open
 from os import path

@@ -44,7 +44,7 @@ def trees_as_text(roots, dataframe, metric, name, context, rank, threshold,
 
 
 def as_text(hnode, dataframe, metric, name, context, rank, threshold,
-            expand_names, indent=u'', child_indent=u'', unicode=False,
+            expand_names, indent='', child_indent='', unicode=False,
             color=False):
     """ Code adapted from https://github.com/joerick/pyinstrument
 
@@ -75,11 +75,11 @@ def as_text(hnode, dataframe, metric, name, context, rank, threshold,
 
         # add context (filename etc.) if requested
         if context in dataframe.columns:
-            result = u'{indent}{time_str} {function}  {c.faint}{code_position}{c.end}\n'.format(indent=indent, time_str=time_str, function=func_name,
+            result = '{indent}{time_str} {function}  {c.faint}{code_position}{c.end}\n'.format(indent=indent, time_str=time_str, function=func_name,
                 code_position=dataframe.loc[df_index, context],
                 c=colors_enabled if color else colors_disabled)
         else:
-            result = u'{indent}{time_str} {function}\n'.format(indent=indent,
+            result = '{indent}{time_str} {function}\n'.format(indent=indent,
                 time_str=time_str, function=func_name)
 
         # only display those edges where child's metric is greater than
@@ -99,17 +99,18 @@ def as_text(hnode, dataframe, metric, name, context, rank, threshold,
 
         for child in children:
             if child is not last_child:
-                c_indent = child_indent + (u'├─ ' if unicode else '|- ')
-                cc_indent = child_indent + (u'│  ' if unicode else '|  ')
+                c_indent = child_indent + ('├─ ' if unicode else '|- ')
+                cc_indent = child_indent + ('│  ' if unicode else '|  ')
             else:
-                c_indent = child_indent + (u'└─ ' if unicode else '`- ')
-                cc_indent = child_indent + u'   '
+                c_indent = child_indent + ('└─ ' if unicode else '`- ')
+                cc_indent = child_indent + '   '
             result += as_text(child, dataframe, metric, name, context, rank,
                               threshold, expand_names, indent=c_indent,
                               child_indent=cc_indent, unicode=unicode, color=color)
     else:
         result = ''
 
+    print(type(result))
     return result
 
 
