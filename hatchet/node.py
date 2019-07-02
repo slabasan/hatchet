@@ -63,6 +63,37 @@ class Node:
             if last == node:
                 return
 
+    def get_callpath(self, roots, node_data):
+        """ Traverse the tree from root to node, appending the frame to get
+            the callpath.
+        """
+        def has_path(node, callpath, dest):
+            if not node:
+                return False
+
+            callpath.append(node.frame.attrs['function'])
+
+            if node.frame.attrs['function'] == dest:
+                return True
+
+            for child in node.children:
+                if has_path(child, callpath, dest):
+                    return True
+
+            val = callpath.pop(-1)
+            return False
+
+        callpath = []
+        has_path(self, callpath, node_data)
+
+        #for i in callpath:
+        #    if i == callpath[-1]:
+        #        print(i)
+        #    else:
+        #        print(i, end = ' -> ')
+
+        return callpath
+
     def __hash__(self):
         return hash(id(self))
 
