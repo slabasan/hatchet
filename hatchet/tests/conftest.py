@@ -16,12 +16,15 @@ import struct
 from glob import glob
 
 import pytest
+
 import numpy as np
 
 
 @pytest.fixture
 def data_dir():
-    """Return path to the top-level data directory for tests."""
+    """
+    Return path to the top-level data directory for tests.
+    """
     parent = os.path.dirname(__file__)
     return os.path.join(parent, "data")
 
@@ -29,7 +32,8 @@ def data_dir():
 def make_mock_metric_db(
     parent, name, nprocs, nnodes, nthreads=1, nmetrics=2, values=[0.0, 1.0]
 ):
-    """Create a set of mocked-up metric DB files.
+    """
+    Create a set of mocked-up metric DB files.
 
     Args:
         parent (str): parent (database) directory for metric DB
@@ -70,7 +74,9 @@ def make_mock_metric_db(
 
 @pytest.fixture
 def calc_pi_hpct_db(data_dir, tmpdir):
-    """Builds a temporary directory containing the calc-pi database."""
+    """
+    Builds a temporary directory containing the calc-pi database.
+    """
     hpct_db_dir = os.path.join(data_dir, "hpctoolkit-cpi-database")
 
     for f in glob(os.path.join(str(hpct_db_dir), "*.metric-db")):
@@ -82,7 +88,9 @@ def calc_pi_hpct_db(data_dir, tmpdir):
 
 @pytest.fixture
 def lulesh_caliper_json(data_dir, tmpdir):
-    """Builds a temporary directory containing the lulesh JSON file."""
+    """
+    Builds a temporary directory containing the lulesh JSON file.
+    """
     cali_json_dir = os.path.join(data_dir, "caliper-lulesh-json")
     cali_json_file = os.path.join(
         cali_json_dir, "lulesh-sample-annotation-profile.json"
@@ -96,7 +104,9 @@ def lulesh_caliper_json(data_dir, tmpdir):
 
 @pytest.fixture
 def calc_pi_callgrind_dot(data_dir, tmpdir):
-    """Builds a temporary directory containing the calc-pi callgrind DOt file."""
+    """
+    Builds a temporary directory containing the calc-pi callgrind DOt file.
+    """
     gprof_dot_dir = os.path.join(data_dir, "gprof2dot-cpi")
     gprof_dot_file = os.path.join(gprof_dot_dir, "callgrind.dot.64042.0.1")
 
@@ -108,8 +118,9 @@ def calc_pi_callgrind_dot(data_dir, tmpdir):
 
 @pytest.fixture
 def mock_graph_literal():
-    """ Creates a mock tree
-        Metasyntactic variables: https://www.ietf.org/rfc/rfc3092.txt
+    """
+    Creates a mock tree
+    Metasyntactic variables: https://www.ietf.org/rfc/rfc3092.txt
     """
     graph_dict = [
         {
@@ -257,7 +268,8 @@ def mock_graph_literal():
 
 @pytest.fixture
 def mock_dag_literal1():
-    """ Creates a mock DAG
+    """
+    Creates a mock DAG.
     """
     dag_ldict = [
         {
@@ -297,7 +309,8 @@ def mock_dag_literal1():
 
 @pytest.fixture
 def mock_dag_literal2():
-    """ Creates a mock DAG
+    """
+    Creates a mock DAG.
     """
     dag_ldict = [
         {

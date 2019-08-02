@@ -62,8 +62,9 @@ procedures = [
 
 
 def test_graphframe(calc_pi_hpct_db):
-    """Sanity test a GraphFrame object with known data."""
-
+    """
+    Sanity test a GraphFrame object with known data.
+    """
     gf = GraphFrame()
     gf.from_hpctoolkit(str(calc_pi_hpct_db))
 
@@ -75,7 +76,9 @@ def test_graphframe(calc_pi_hpct_db):
 
 
 def test_read_calc_pi_database(calc_pi_hpct_db):
-    """Sanity check the HPCT database reader by examining a known input."""
+    """
+    Sanity check the HPCT database reader by examining a known input.
+    """
     reader = HPCToolkitReader(str(calc_pi_hpct_db))
     reader.fill_tables()
 

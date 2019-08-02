@@ -24,7 +24,9 @@ roots = [
 
 
 def test_graphframe(calc_pi_callgrind_dot):
-    """Sanity test a GraphFrame object with known data."""
+    """
+    Sanity test a GraphFrame object with known data.
+    """
 
     gf = GraphFrame()
     gf.from_gprof_dot(str(calc_pi_callgrind_dot))
@@ -35,7 +37,9 @@ def test_graphframe(calc_pi_callgrind_dot):
 
 
 def test_read_calc_pi_database(calc_pi_callgrind_dot):
-    """Sanity check the GprofDot reader by examining a known input."""
+    """
+    Sanity check the GprofDot reader by examining a known input.
+    """
 
     reader = GprofDotReader(str(calc_pi_callgrind_dot))
 

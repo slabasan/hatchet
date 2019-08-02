@@ -9,12 +9,14 @@
 # For details, see: https://github.com/LLNL/hatchet
 # Please also read the LICENSE file for the MIT License notice.
 ##############################################################################
+
 from functools import total_ordering
 
 
 @total_ordering
 class Node:
-    """ A node in the graph. The node only stores its frame.
+    """
+    A node in the graph. The node only stores its frame.
     """
 
     def __init__(self, frame_obj, parent):
@@ -26,20 +28,23 @@ class Node:
         self.children = []
 
     def add_parent(self, node):
-        """ Adds a parent to this node's list of parents.
+        """
+        Adds a parent to this node's list of parents.
         """
         assert isinstance(node, Node)
         self.parents.append(node)
 
     def add_child(self, node):
-        """ Adds a child to this node's list of children.
+        """
+        Adds a child to this node's list of children.
         """
         assert isinstance(node, Node)
         self.children.append(node)
 
     def check_dag_equal(self, other, vs=None, vo=None):
-        """ Check if DAG rooted at self has the same structure as that rooted
-            at other
+        """
+        Check if DAG rooted at self has the same structure as that rooted at
+        other.
         """
         if vs is None:
             vs = set()
@@ -80,7 +85,8 @@ class Node:
         return True
 
     def traverse(self, order="pre"):
-        """ Traverse the tree depth-first and yield each node.
+        """
+        Traverse the tree depth-first and yield each node.
         """
         if order == "pre":
             yield self
@@ -93,7 +99,8 @@ class Node:
             yield self
 
     def traverse_bf(self):
-        """ Traverse the tree breadth-first and yield each node.
+        """
+        Traverse the tree breadth-first and yield each node.
         """
         yield self
         last = self
@@ -115,6 +122,7 @@ class Node:
         return id(self) < id(other)
 
     def __str__(self):
-        """ Returns a string representation of the node.
+        """
+        Returns a string representation of the node.
         """
         return str(self.frame)

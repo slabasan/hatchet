@@ -9,10 +9,12 @@
 # For details, see: https://github.com/LLNL/hatchet
 # Please also read the LICENSE file for the MIT License notice.
 ##############################################################################
+
 import json
-import pandas as pd
-import sys
 import re
+import sys
+
+import pandas as pd
 
 from .node import Node
 from .graph import Graph
@@ -21,7 +23,8 @@ from .util.timer import Timer
 
 
 class CaliperReader:
-    """ Read in a Caliper split JSON file.
+    """
+    Read in a Caliper split JSON file.
     """
 
     def __init__(self, file_name):
@@ -117,7 +120,8 @@ class CaliperReader:
         return list_roots
 
     def create_graphframe(self):
-        """ Read the caliper JSON file to extract the calling context tree.
+        """
+        Read the caliper JSON file to extract the calling context tree.
         """
         with self.timer.phase("read json"):
             self.read_json_sections()

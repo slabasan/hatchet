@@ -41,7 +41,9 @@ annotations = [
 
 
 def test_graphframe(lulesh_caliper_json):
-    """Sanity test a GraphFrame object with known data."""
+    """
+    Sanity test a GraphFrame object with known data.
+    """
 
     gf = GraphFrame()
     gf.from_caliper(str(lulesh_caliper_json))
@@ -52,7 +54,9 @@ def test_graphframe(lulesh_caliper_json):
 
 
 def test_read_calc_pi_database(lulesh_caliper_json):
-    """Sanity check the Caliper reader by examining a known input."""
+    """
+    Sanity check the Caliper reader by examining a known input.
+    """
     reader = CaliperReader(str(lulesh_caliper_json))
     reader.read_json_sections()
 

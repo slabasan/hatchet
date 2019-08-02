@@ -14,8 +14,9 @@ from hatchet import GraphFrame
 
 
 def test_filter(mock_graph_literal):
-    """Test the filter operation with a foo-bar tree."""
-
+    """
+    Test the filter operation with a foo-bar tree.
+    """
     gf = GraphFrame()
     gf.from_literal(mock_graph_literal)
 
