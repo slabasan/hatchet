@@ -41,8 +41,8 @@ class GraphFrame:
         Likely, you do not want to use this function.
 
         See ``from_hpctoolkit``, ``from_caliper``, ``from_caliper_json``,
-        ``from_gprof_dot``, and other reader methods for easier ways to
-        create a ``GraphFrame``.
+        ``from_gprof_dot``, ``from_ascent``, and other reader methods for
+        easier ways to create a ``GraphFrame``.
 
         Arguments:
              graph (Graph): Graph of nodes in this GraphFrame.
@@ -121,6 +121,75 @@ class GraphFrame:
         """Read in a pstats/prof file generated using python's cProfile."""
         # import this lazily to avoid circular dependencies
         from .readers.cprofile_reader import CProfileReader
+
+    @staticmethod
+    def from_ascent(dirname):
+        """Read in Ascent data files."""
+        # import this lazily to avoid circular dependencies
+        from .readers.ascent_reader import AscentReader
+
+        return AscentReader(dirname).read()
+
+    @staticmethod
+    def from_literal(graph_dict):
+        """Create a GraphFrame from a list of dictionaries.
+
+        TODO: calculate inclusive metrics automatically.
+
+        Example:
+
+        .. code-block:: console
+
+            dag_ldict = [
+                {
+                    "name": "A",
+                    "metrics": {"time (inc)": 130.0, "time": 0.0},
+                    "children": [
+                        {
+                            "name": "B",
+                            "metrics": {"time (inc)": 20.0, "time": 5.0},
+                            "children": [
+                                {
+                                    "name": "C",
+                                    "metrics": {"time (inc)": 5.0, "time": 5.0},
+                                    "children": [
+                                        {
+                                            "name": "D",
+                                            "metrics": {"time (inc)": 8.0, "time": 1.0},
+                                        }
+                                    ],
+                                }
+                            ],
+                        },
+                        {
+                            "name": "E",
+                            "metrics": {"time (inc)": 55.0, "time": 10.0},
+                            "children": [
+                                {"name": "H", "metrics": {"time (inc)": 1.0, "time": 9.0}}
+                            ],
+                        },
+                    ],
+                }
+            ]
+
+        Return:
+            (GraphFrame): graphframe containing data from dictionaries
+        """
+
+        def parse_node_literal(child_dict, hparent):
+            """Create node_dict for one node and then call the function
+            recursively on all children.
+            """
+
+            hnode = Node(Frame({"name": child_dict["name"]}), hparent)
+
+            node_dicts.append(
+                dict(
+                    {"node": hnode, "name": child_dict["name"]}, **child_dict["metrics"]
+                )
+            )
+            hparent.add_child(hnode)
+>>>>>>> fba7116 (Implement ascent reader)
 
         return CProfileReader(filename).read()
 
