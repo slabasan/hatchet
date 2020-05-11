@@ -41,6 +41,14 @@ def test_add(mock_graph_literal):
     gf5 = gf3.add(gf4)
     assert gf5.graph == gf3.graph == gf4.graph
 
+    gf6 = gf1 + gf2 + gf1
+    assert gf6.dataframe["time"].sum() == 495
+
+    gf7 = gf1 + gf2
+    gf8 = gf7 + gf1
+    assert gf8.graph == gf6.graph
+    assert gf8.dataframe["time"].sum() == 495
+
 
 def test_sub(mock_graph_literal):
     gf1 = GraphFrame.from_literal(mock_graph_literal)
