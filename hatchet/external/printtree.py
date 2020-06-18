@@ -171,7 +171,7 @@ def as_text(
         # only display those edges where child's metric is greater than
         # threshold
         children = []
-        for child in hnode.children:
+        for child in sorted(hnode.children):
             if "rank" in dataframe.index.names and "thread" in dataframe.index.names:
                 df_index = (child, rank, thread)
             elif "rank" in dataframe.index.names:
@@ -187,7 +187,7 @@ def as_text(
         if children:
             last_child = children[-1]
 
-        for child in children:
+        for child in sorted(children):
             if child is not last_child:
                 c_indent = child_indent + ("├─ " if unicode else "|- ")
                 cc_indent = child_indent + ("│  " if unicode else "|  ")
