@@ -211,7 +211,7 @@ class Graph:
                 new_children.append(new_node)
 
             # step through both lists and merge nodes
-            self_children, other_children = iter(self_children), iter(other_children)
+            self_children, other_children = iter(sorted(self_children)), iter(sorted(other_children))
             self_child = next(self_children, None)
             other_child = next(other_children, None)
 
