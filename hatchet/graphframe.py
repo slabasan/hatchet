@@ -56,6 +56,13 @@ class GraphFrame:
         self.inc_metrics = [] if inc_metrics is None else inc_metrics
 
     @staticmethod
+    def load(filename):
+        # import this lazily to avoid circular dependencies
+        from .readers.hatchet_snapshot_reader import HatchetSnapshotReader
+
+        return HatchetSnapshotReader(filename).read()
+
+    @staticmethod
     def from_hpctoolkit(dirname):
         """Read an HPCToolkit database directory into a new GraphFrame.
 
@@ -781,6 +788,33 @@ class GraphFrame:
         new_gf = GraphFrame(graph, tmp_df, self.exc_metrics, self.inc_metrics)
         new_gf.drop_index_levels()
         return new_gf
+
+    def save(self, fname="hatchet-snapshot"):
+        # hatchet snapshot files have CSV extension
+        df_fname = fname + ".csv"
+
+        print("")
+        print(self.dataframe)
+
+        # modify a copy of the dataframe (to be outputted to snapshot file)
+        df_copy = self.dataframe.copy()
+
+        df_copy.reset_index(inplace=True, drop=False)
+        df_copy.set_index(["node"], inplace=True)
+
+        # TODO: what if parents is a list?
+        df_copy["parent"] = np.nan
+        for _, node in enumerate(self.graph.traverse()):
+            if node.parents:
+                df_copy.at[node, "parent"] = node.parents[0]._hatchet_nid
+
+        print("")
+        print(df_copy)
+
+        df_copy.reset_index(inplace=True, drop=False)
+
+        df_copy.to_csv(df_fname)
+
 
     def add(self, other, *args, **kwargs):
         """Returns the column-wise sum of two graphframes as a new graphframe.

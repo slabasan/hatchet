@@ -562,3 +562,11 @@ def test_depth(mock_graph_literal):
 
     assert nnodes_depth_2 == 7
     assert max_depth == 5
+
+
+def test_graphframe_save_mock(mock_graph_literal):
+    """Test the save operation with literal data."""
+    gf = GraphFrame.from_literal(mock_graph_literal)
+    print("")
+    print(gf.tree(color=True))
+    gf.save(fname="mock-snapshot")
