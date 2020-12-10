@@ -189,7 +189,6 @@ class GraphFrame:
                 )
             )
             hparent.add_child(hnode)
->>>>>>> fba7116 (Implement ascent reader)
 
         return CProfileReader(filename).read()
 

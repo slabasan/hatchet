@@ -70,7 +70,6 @@ class AscentReader:
                     hparent.add_child(hnode)
 
                     node_dict = {"node": hnode, "name": node_label, "nid": c}
-
                     self.node_dicts.append(node_dict)
 
                     self.idx_to_node[c] = hnode
@@ -220,21 +219,14 @@ class AscentReader:
             df_nodes = pd.DataFrame.from_dict(data=self.node_dicts)
 
             dataframe = pd.merge(metrics, df_nodes, on="nid")
-            dataframe.set_index(["node", "rank", "cycle"], inplace=True)
+            dataframe.set_index(["node", "rank"], inplace=True)
 
         # create list of exclusive and inclusive metric columns
         exc_metrics = []
         inc_metrics = []
-        #for column in self.metric_columns:
-        #    if "(inc)" in column:
-        #        inc_metrics.append(column)
-        #    else:
-        #        exc_metrics.append(column)
         # for now, only append time here, other columns can't be added or
         # subtracted
         exc_metrics.append("time")
 
-        print("")
-        print(self.timer)
         gf = hatchet.graphframe.GraphFrame(graph, dataframe, exc_metrics, inc_metrics)
         return gf
