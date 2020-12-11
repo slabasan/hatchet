@@ -122,6 +122,8 @@ class GraphFrame:
         # import this lazily to avoid circular dependencies
         from .readers.cprofile_reader import CProfileReader
 
+        return CProfileReader(filename).read()
+
     @staticmethod
     def from_ascent(dirname):
         """Read in Ascent data files."""
@@ -129,68 +131,6 @@ class GraphFrame:
         from .readers.ascent_reader import AscentReader
 
         return AscentReader(dirname).read()
-
-    @staticmethod
-    def from_literal(graph_dict):
-        """Create a GraphFrame from a list of dictionaries.
-
-        TODO: calculate inclusive metrics automatically.
-
-        Example:
-
-        .. code-block:: console
-
-            dag_ldict = [
-                {
-                    "name": "A",
-                    "metrics": {"time (inc)": 130.0, "time": 0.0},
-                    "children": [
-                        {
-                            "name": "B",
-                            "metrics": {"time (inc)": 20.0, "time": 5.0},
-                            "children": [
-                                {
-                                    "name": "C",
-                                    "metrics": {"time (inc)": 5.0, "time": 5.0},
-                                    "children": [
-                                        {
-                                            "name": "D",
-                                            "metrics": {"time (inc)": 8.0, "time": 1.0},
-                                        }
-                                    ],
-                                }
-                            ],
-                        },
-                        {
-                            "name": "E",
-                            "metrics": {"time (inc)": 55.0, "time": 10.0},
-                            "children": [
-                                {"name": "H", "metrics": {"time (inc)": 1.0, "time": 9.0}}
-                            ],
-                        },
-                    ],
-                }
-            ]
-
-        Return:
-            (GraphFrame): graphframe containing data from dictionaries
-        """
-
-        def parse_node_literal(child_dict, hparent):
-            """Create node_dict for one node and then call the function
-            recursively on all children.
-            """
-
-            hnode = Node(Frame({"name": child_dict["name"]}), hparent)
-
-            node_dicts.append(
-                dict(
-                    {"node": hnode, "name": child_dict["name"]}, **child_dict["metrics"]
-                )
-            )
-            hparent.add_child(hnode)
-
-        return CProfileReader(filename).read()
 
     @staticmethod
     def from_pyinstrument(filename):

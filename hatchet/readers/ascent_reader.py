@@ -112,7 +112,7 @@ class AscentReader:
     # cycle, path, time, device, input_cells, input_domains, ...
     def get_header(self, d):
         """Read single Ascent data file, single cycle only to get unique list
-           of metric column headers.
+        of metric column headers.
         """
 
         def _get_child(d):
