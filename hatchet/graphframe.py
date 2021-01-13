@@ -614,6 +614,7 @@ class GraphFrame:
     def tree(
         self,
         metric_column="time",
+        secondary_metric_column="",
         precision=3,
         name_column="name",
         expand_name=False,
@@ -648,6 +649,7 @@ class GraphFrame:
             self.graph.roots,
             self.dataframe,
             metric_column=metric_column,
+            secondary_metric_column=secondary_metric_column,
             precision=precision,
             name_column=name_column,
             expand_name=expand_name,

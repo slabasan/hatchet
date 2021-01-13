@@ -49,6 +49,7 @@ class ConsoleRenderer:
             return result
 
         self.metric = kwargs["metric_column"]
+        self.other_metric = kwargs["secondary_metric_column"]
         self.precision = kwargs["precision"]
         self.name = kwargs["name_column"]
         self.expand = kwargs["expand_name"]
@@ -63,6 +64,12 @@ class ConsoleRenderer:
             raise KeyError(
                 "metric_column={} does not exist in the dataframe, please select a valid column.".format(
                     self.metric
+                )
+            )
+        if self.other_metric and self.other_metric not in dataframe.columns:
+            raise KeyError(
+                "secondary_metric_column={} does not exist in the dataframe, please select a valid column.".format(
+                    self.other_metric
                 )
             )
 
@@ -84,6 +91,24 @@ class ConsoleRenderer:
             self.min_metric = dataframe.replace([np.inf, -np.inf], np.nan)[
                 self.metric
             ].min()
+
+        # if other_metric is specified, grab its min and max value, ignoring
+        # inf and nan values
+        if self.other_metric:
+            if "rank" in dataframe.index.names:
+                self.other_max_metric = (
+                    dataframe.replace([np.inf, -np.inf], np.nan).xs(self.rank, level=1)
+                )[self.other_metric].max()
+                self.other_min_metric = (
+                    dataframe.replace([np.inf, -np.inf], np.nan).xs(self.rank, level=1)
+                )[self.other_metric].min()
+            else:
+                self.other_max_metric = dataframe.replace([np.inf, -np.inf], np.nan)[
+                    self.other_metric
+                ].max()
+                self.other_min_metric = dataframe.replace([np.inf, -np.inf], np.nan)[
+                    self.other_metric
+                ].min()
 
         if self.unicode:
             self.lr_arrows = {"◀": u"◀ ", "▶": u"▶ "}
@@ -132,6 +157,19 @@ class ConsoleRenderer:
                 + "\n"
             )
 
+        def render_other_label(index, low, high):
+            other_metric_range = self.other_max_metric - self.other_min_metric
+
+            return (
+                self.colors.colormap[index]
+                + u"█ "
+                + self.colors.end
+                + "{:.2f}".format(low * other_metric_range + self.other_min_metric)
+                + " - "
+                + "{:.2f}".format(high * other_metric_range + self.other_min_metric)
+                + "\n"
+            )
+
         legend = (
             "\n"
             + "\033[4m"
@@ -148,6 +186,24 @@ class ConsoleRenderer:
         legend += render_label(3, 0.3, 0.5)
         legend += render_label(4, 0.1, 0.3)
         legend += render_label(5, 0.0, 0.1)
+
+        if self.other_metric:
+            legend += (
+                "\n"
+                + "\033[4m"
+                + "Legend"
+                + self.colors.end
+                + " (Secondary Metric: "
+                + self.other_metric
+                + ")\n"
+            )
+
+            legend += render_other_label(0, 0.9, 1.0)
+            legend += render_other_label(1, 0.7, 0.9)
+            legend += render_other_label(2, 0.5, 0.7)
+            legend += render_other_label(3, 0.3, 0.5)
+            legend += render_other_label(4, 0.1, 0.3)
+            legend += render_other_label(5, 0.0, 0.1)
 
         legend += "\n" + self._ansi_color_for_name("name") + "name" + self.colors.end
         legend += " User code    "
@@ -174,13 +230,26 @@ class ConsoleRenderer:
                 df_index = node
 
             node_metric = dataframe.loc[df_index, self.metric]
+            if self.other_metric:
+                other_node_metric = dataframe.loc[df_index, self.other_metric]
 
             metric_precision = "{:." + str(self.precision) + "f}"
-            metric_str = (
-                self._ansi_color_for_metric(node_metric)
-                + metric_precision.format(node_metric)
-                + self.colors.end
-            )
+            if not self.other_metric:
+                metric_str = (
+                    self._ansi_color_for_metric(node_metric)
+                    + metric_precision.format(node_metric)
+                    + self.colors.end
+                )
+            else:
+                metric_str = (
+                    self._ansi_color_for_metric(node_metric)
+                    + metric_precision.format(node_metric)
+                    + self.colors.end
+                    + ", "
+                    + self._ansi_color_for_other_metric(other_node_metric)
+                    + metric_precision.format(other_node_metric)
+                    + self.colors.end
+                )
 
             node_name = dataframe.loc[df_index, self.name]
             if self.expand is False:
@@ -252,6 +321,29 @@ class ConsoleRenderer:
 
         if metric_range != 0:
             proportion_of_total = (metric - self.min_metric) / metric_range
+        else:
+            proportion_of_total = metric / 1
+
+        if proportion_of_total > 0.9:
+            return self.colors.colormap[0]
+        elif proportion_of_total > 0.7:
+            return self.colors.colormap[1]
+        elif proportion_of_total > 0.5:
+            return self.colors.colormap[2]
+        elif proportion_of_total > 0.3:
+            return self.colors.colormap[3]
+        elif proportion_of_total > 0.1:
+            return self.colors.colormap[4]
+        elif proportion_of_total >= 0:
+            return self.colors.colormap[5]
+        else:
+            return self.colors.blue
+
+    def _ansi_color_for_other_metric(self, metric):
+        other_metric_range = self.other_max_metric - self.other_min_metric
+
+        if other_metric_range != 0:
+            proportion_of_total = (metric - self.other_min_metric) / other_metric_range
         else:
             proportion_of_total = metric / 1
 
