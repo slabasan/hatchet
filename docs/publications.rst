@@ -25,3 +25,7 @@ Tutorials
 =========
 
 - Performance Analysis using Hatchet, LLNL, July 29/31, 2020.
+
+Miscellaneous
+=============
+`Tool Time: Analyzing Performance Profiles using Hatchet`. Performance Optimisation and Productivity. Sept 2020. https://pop-cof.eu/blog/tool-time-analyzing-performance-profiles-using-hatchet.
